@@ -1,17 +1,19 @@
 <?
-use 'errorHandler';
+
 // Klasa do zarządzania komunikacja z API
 class petStoreAPI
 {
     private $apiUrl;
+    private $errorHandler;
     
     /**
      * Summary of __construct
      * @param mixed $apiUrl
      */
-    public function __construct($apiUrl)
+    public function __construct($apiUrl, $errorHandler)
     {
         $this->apiUrl = $apiUrl;
+        $this->errorHandler = $errorHandler;
     }
 
     // Metoda która wykonuje żądania HTTP
@@ -49,7 +51,7 @@ class petStoreAPI
         if($statusCode >= 400){
             $error = json_decode($response, true);
             $errorMessage = $error['message'] ?? 'Unknown error';
-            displayError($errorMessage);
+            $this->errorHandler->displayError($errorMessage);
         } else {
             return json_decode($response, true);
         }
@@ -59,12 +61,13 @@ class petStoreAPI
 
     // Metoda do pobrania wszystkich elementów z /pet
     /**
-     * Summary of getAllPets
+     * Summary of getPet
+     * @param mixed $petId
      * @return mixed
      */
-    public function getAllPets() 
+    public function getPet($petId) 
     {
-        return $this->makeRequest('GET', $this->apiUrl.'/pet');    
+        return $this->makeRequest('GET', $this->apiUrl.'/pet/'.$petId);    
     }
 
     //Metoda do dodawania nowego elementu
