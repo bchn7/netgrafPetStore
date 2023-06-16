@@ -1,6 +1,7 @@
 <?
+use 'errorHandler';
 // Klasa do zarządzania komunikacja z API
-class petStoreAPI 
+class petStoreAPI
 {
     private $apiUrl;
     
@@ -48,7 +49,7 @@ class petStoreAPI
         if($statusCode >= 400){
             $error = json_decode($response, true);
             $errorMessage = $error['message'] ?? 'Unknown error';
-
+            displayError($errorMessage);
         } else {
             return json_decode($response, true);
         }
